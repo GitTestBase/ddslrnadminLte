@@ -8,7 +8,6 @@
   <div class="card">
     <div class="card-body register-card-body">
       <p class="login-box-msg">Register a new membership</p>
-
       <form id="register" method="post">
         @csrf
         <div class="input-group mb-3">
@@ -19,6 +18,16 @@
             </div>
           </div>
         </div>
+        <div class="error-message"></div>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Phone Number" name="phone">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-phone"></span>
+            </div>
+          </div>
+        </div>
+        <div class="error-message"></div>
         <div class="input-group mb-3">
           <input type="email" class="form-control" placeholder="Email" name="email">
           <div class="input-group-append">
@@ -27,6 +36,7 @@
             </div>
           </div>
         </div>
+        <div class="error-message"></div>
         <div class="input-group mb-3">
           <input type="password" class="form-control" placeholder="Password" name="password">
           <div class="input-group-append">
@@ -35,6 +45,7 @@
             </div>
           </div>
         </div>
+        <div class="error-message"></div>
         <div class="input-group mb-3">
           <input type="password" class="form-control" placeholder="Retype password" name="password_confirmation">
           <div class="input-group-append">
@@ -52,6 +63,7 @@
           <!-- /.col -->
         </div>
       </form>
+      <div class="success-message"></div>
     </div>
     <!-- /.form-box -->
   </div><!-- /.card -->
@@ -72,13 +84,31 @@
             dataType:'json',
             url:'{{route('registerPost')}}',
             data:data,
-            success:function(response)
+            success:function(data)
             {
-                $(".error-message").remove();
-
-                if (response) {
-                    $(".error-message").append('<p class="error-message text-danger">' + message + '</p>');
-                }
+              $('.success-message').empty();
+              $(".error-message").empty();
+              if(data.success == 0)
+              {
+               
+                $.each(data.response, function(field,message)
+                {
+                  var inputField = $("input[name="+field+"]")
+                  var errorDiv = inputField.closest('.input-group').next('.error-message')
+                  errorDiv.append('<p class="error-message text-danger">' + message + '</p>');
+                })
+              }
+              else if(data.success == 2)
+              {
+                
+                $('.success-message').append('<p class="error-message text-danger">' + data.response + '</p>')
+              }
+              else{
+                $('.success-message').append('<p class="error-message text-success">' + data.response + '</p>')
+                setTimeout(() => {
+                  window.location.href = '{{ route('login') }}'
+                }, 2000);
+              }
             }
         })
     })

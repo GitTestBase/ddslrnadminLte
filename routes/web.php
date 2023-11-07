@@ -16,8 +16,9 @@ use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('Auth.index');
-});
-
+})->name('login');
+Route::post('loginPost',[AuthController::class, 'loginPost'])->name('loginPost');
 route::get('/register',[AuthController::class, 'register'])->name('register');
 route::post('/registerPost',[AuthController::class, 'registerPost'])->name('registerPost');
 
+Route::get('/dashboard',[AuthController::class,'dashboard'])->name('dashboard');
