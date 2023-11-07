@@ -71,6 +71,14 @@ class AuthController extends Controller
             {
                 return redirect()->route('dashboard')->with('success', 'Login successfully!');
             }
+            else{
+                return redirect()->back()->with('error', 'Login fail!');
+            }
         }
+    }
+
+    public function dashboard()
+    {
+        return view('dashboard');
     }
 }
