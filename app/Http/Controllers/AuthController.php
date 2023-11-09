@@ -63,22 +63,32 @@ class AuthController extends Controller
 
         if($validate->fails())
         {
-            return response()->json(['success'=>0,'response'=> $validate->errors()->messages()]);
+            return redirect()->back()->with(['errors'=>$validate->errors()]);
+
+            // return response()->json(['success'=>0,'response'=> $validate->errors()->messages()]);
         }
         else{
             
-            if(Auth::attempt(['email' => $request->email, 'password' => $request->password]) == true)
+            if(Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->filled('remember')))
             {
                 return redirect()->route('dashboard')->with('success', 'Login successfully!');
             }
-            else{
-                return redirect()->back()->with('error', 'Login fail!');
+            else
+            {
+                return redirect()->back()->with('errorsMessage', 'Credentials not match our records!');
             }
+            
         }
     }
 
     public function dashboard()
     {
         return view('dashboard');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
     }
 }

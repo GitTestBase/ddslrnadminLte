@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,11 +15,17 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+
 Route::get('/', function () {
-    return view('Auth.index');
+    return Auth::check() ? redirect()->route('dashboard') : view('Auth.index');
 })->name('login');
 Route::post('loginPost',[AuthController::class, 'loginPost'])->name('loginPost');
 route::get('/register',[AuthController::class, 'register'])->name('register');
 route::post('/registerPost',[AuthController::class, 'registerPost'])->name('registerPost');
+Route::post('/rememberMe',[AuthController::class,'rememberMe'])->name('rememberMe');
 
-Route::get('/dashboard',[AuthController::class,'dashboard'])->name('dashboard');
+Route::middleware(['auth'])->group(function()
+{
+    Route::get('/dashboard',[AuthController::class,'dashboard'])->name('dashboard');
+    Route::get('/logout',[AuthController::class,'logout'])->name('logout');
+});

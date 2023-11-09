@@ -9,7 +9,13 @@
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Sign in to start your session</p>
-
+      {{-- {{DD($errors)}} --}}
+    @if(session('errorsMessage'))
+      <div class="alert alert-danger">
+          {{ session('errorsMessage') }}
+      </div>
+    @endif
+   
       <form action="{{route('loginPost')}}" method="post">
         @csrf
         <div class="input-group mb-3">
@@ -20,6 +26,11 @@
             </div>
           </div>
         </div>
+        @if(session('errors'))
+            <p class="text-danger">
+                {{ session('errors')->first('email') }}
+            </p>
+        @endif
         <div class="input-group mb-3">
           <input type="password" class="form-control" placeholder="Password" name="password">
           <div class="input-group-append">
@@ -28,6 +39,17 @@
             </div>
           </div>
         </div>
+      @if(session('errors'))
+          <p class="text-danger">
+              {{ session('errors')->first('password') }}
+          </p>
+      @endif
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="remember" id="remember">
+        <label class="form-check-label" for="remember">
+            Remember Me
+        </label>
+    </div>
         <div class="row">
           <!-- /.col -->
           <div class="col-4">
